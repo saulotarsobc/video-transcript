@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY main.py .
 # COPY audio.wav .
-COPY requirements.txt .
+COPY requirements-on-docker.txt requirements.txt
 COPY .env.production .env
 COPY /utils utils
 
@@ -24,6 +24,6 @@ RUN pip install -r requirements.txt;
 # prender termial para o container não fechar
 # CMD ["tail", "-f", "/dev/null"]
 
-EXPOSE 8000
+# EXPOSE 8000
 
 CMD ["python", "main.py"]

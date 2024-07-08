@@ -19,7 +19,6 @@ os.makedirs('./temp/models', exist_ok=True)
 model = whisper.load_model(
     MODEL,
     download_root="./temp/models",
-    in_memory=True
 )
 
 
@@ -28,16 +27,6 @@ logger = Logger()
 
 # debug
 global_videos = [
-    {
-        'id': 3,
-        'fileName': 'boletim-4',
-        'name': 'Boletim do Corpo Governante (2024) — n.º 4',
-        'url': 'https://download-a.akamaihd.net/files/content_assets/2a/1112024011_T_cnt_1_r360P.mp4',
-        'course': {
-                'name': 'Boletim do Corpo Governante',
-                'subtitle': 'Nesse boletim veremos o que nossos irmão estão achando sobre o congresso Regional de 2024'
-        },
-    },
     {
         'id': 1,
         'fileName': 'esportes-diversao-garantida',
@@ -56,6 +45,16 @@ global_videos = [
         'course': {
                 'name': 'Vamos Aprender com os Amigos de Jeová',
                 'subtitle': 'Nesse video vamos aprender comoo demostar a coragem que os Amigos de Jeová tem! Em especial o profeta Jeremias.'
+        },
+    },
+    {
+        'id': 3,
+        'fileName': 'boletim-4',
+        'name': 'Boletim do Corpo Governante (2024) — n.º 4',
+        'url': 'https://download-a.akamaihd.net/files/content_assets/2a/1112024011_T_cnt_1_r360P.mp4',
+        'course': {
+                'name': 'Boletim do Corpo Governante',
+                'subtitle': 'Nesse boletim veremos o que nossos irmão estão achando sobre o congresso Regional de 2024'
         },
     },
 ]
@@ -193,22 +192,14 @@ if __name__ == '__main__':
                 logger.info(f'Remaining videos: {len(global_videos)}')
 
                 downloaded = videoDownload(video['fileName'], video['url'])
-
                 prompt = generetePrompt(video['name'], video['course'])
 
                 result = transcribe(
-                    prompt,
-                    video['fileName'],
-                    'pt',
-                    'transcribe',
-                    prompt,
-                )
+                    prompt, video['fileName'], 'pt', 'transcribe', prompt)
 
                 if result is not None:
                     saveTranscription(result, video['fileName'])
-
                     json_to_srt(result, video['fileName'])
-
                     removeVideoById(video['id'])
 
                 elif result is None:

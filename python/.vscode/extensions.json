@@ -1,3 +1,6 @@
 {
-  "recommendations": ["hediet.vscode-drawio"]
+  "recommendations": [
+    "hediet.vscode-drawio",
+    "bierner.markdown-preview-github-styles"
+  ]
 }
