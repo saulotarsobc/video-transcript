@@ -1,13 +1,6 @@
-# Sistema de transcrição de vídeos e criador de legendas em .srt usando o Gemini
-
-## Desenvolvido por [saulotarsobc](https://github.com/saulotarsobc)
-
-## Roadmap 1.0
-
-- [ ] Conversão do vídeo para audio
-- [ ] Resumo sobre o que o vídeo fala
-- [ ] Conversão para legendas
-
 ## Help
 
--How to install and use Whisper offline (no internet required) [#1463](https://github.com/openai/whisper/discussions/1463)
+- [Como instalar e implementar o Whisper, a melhor alternativa de código aberto para o Google Speech-To-Text](https://nlpcloud.com/pt/how-to-install-and-deploy-whisper-the-best-open-source-alternative-to-google-speech-to-text.html)
+- [Busca semântica com IA (LangChain + Embeddings) | Aquecimento IA para devsz](https://youtu.be/1pFb0AOLpYo?list=PLsZjBZxrSkg5wafkKb-rquVWn7p6-pH3P)
+- [https://sbert.net/](https://sbert.net/)
+- [https://huggingface.co/](https://huggingface.co/)
