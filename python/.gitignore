@@ -5,11 +5,7 @@
 /models
 /aula.*
 /*.mp4
-/temp/models/
-/temp/audio/
-/temp/aula/
-/temp/transcriptions/
-/temp/videos/
+/temp
 
 __pycache__
 

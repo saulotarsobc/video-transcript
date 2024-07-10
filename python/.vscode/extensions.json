@@ -1,6 +1,8 @@
 {
   "recommendations": [
     "hediet.vscode-drawio",
-    "bierner.markdown-preview-github-styles"
+    "bierner.markdown-preview-github-styles",
+    "ms-python.autopep8",
+    "kevinrose.vsc-python-indent"
   ]
 }

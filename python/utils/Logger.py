@@ -1,4 +1,3 @@
-
 from colorama import init, Fore
 
 init(autoreset=True)
@@ -15,7 +14,7 @@ class Logger:
         Returns:
             None
         """
-        print(f"{Fore.GREEN}\n{message}")
+        print(f"{Fore.GREEN}{message}")
 
     def info(self, message):
         """
@@ -27,7 +26,7 @@ class Logger:
         Returns:
             None
         """
-        print(f"{Fore.YELLOW}\n{message}")
+        print(f"{Fore.YELLOW}{message}")
 
     def error(self, message):
         """
@@ -39,4 +38,7 @@ class Logger:
         Returns:
             None
         """
-        print(f"{Fore.RED}\n{message}")
+        print(f"{Fore.RED}{message}")
+
+
+logger = Logger()

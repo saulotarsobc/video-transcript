@@ -39,13 +39,13 @@ def json_to_srt(json_data):
     return srt_content.strip()
 
 
-def write_srt(srt_content, filename):
-    with open(filename, "w", encoding="utf-8") as f:
+def write_srt(srt_content, ffile_name):
+    with open(ffile_name, "w", encoding="utf-8") as f:
         f.write(srt_content)
 
 
 # =======================
-file = 'audio.wav'
+file = "audio.wav"
 
 
 model = whisper.load_model("tiny", download_root="temp")

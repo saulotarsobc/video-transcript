@@ -73,22 +73,22 @@ def to_str(json_data):
     return srt_content.strip()
 
 
-def write_srt(srt_content, filename):
+def write_srt(srt_content, ffile_name):
     """
-    Write the given `srt_content` to a file with the specified `filename`.
+    Write the given `srt_content` to a file with the specified `ffile_name`.
 
     Parameters:
         srt_content (str): The content to be written to the file.
-        filename (str): The name of the file to write the content to.
+        ffile_name (str): The name of the file to write the content to.
 
     Returns:
         None
     """
-    with open(filename, "w", encoding="utf-8") as f:
+    with open(ffile_name, "w", encoding="utf-8") as f:
         f.write(srt_content)
 
 
-def json_to_srt(json_data, filename):
+def json_to_srt(json_data, ffile_name):
     """
     Converts a JSON data structure representing a transcript into a string in the .srt format
     and saves it to a file.
@@ -98,17 +98,14 @@ def json_to_srt(json_data, filename):
             key containing a list of dictionaries, each representing a segment of the transcript. Each segment
             should have a "start" key (float) representing the start time of the segment, an "end" key (float)
             representing the end time of the segment, and a "text" key (str) representing the text of the segment.
-        filename (str): The name of the file to save the transcription in.
+        ffile_name (str): The name of the file to save the transcription in.
 
     Returns:
         None
     """
     # Open the file in write mode, with UTF-8 encoding
-    with open(f'./temp/transcriptions/{filename}/transcription.srt', "w", encoding="utf-8") as f:
-        # Convert the JSON data structure to the .srt format
+    final_file_name = f"{ffile_name.split('.')[0]}.srt"
+    with open(f"./temp/srts/{final_file_name}", "w", encoding="utf-8") as f:
         data = to_str(json_data)
-        # Write the .srt data to the file
         f.write(data)
-    # Print a message indicating that the transcription has been saved
-    print(
-        f'Saved transcription in ./temp/transcriptions/{filename}/transcription.srt!')
+    print(f"Saved transcription in ./temp/{final_file_name}!")

@@ -11,12 +11,12 @@ def format_time(seconds):
     return time_str.replace(".", ",")
 
 
-def write_srt(transcription, filename):
-    with open(filename, "w", encoding="utf-8") as f:
-        for i, segment in enumerate(transcription['segments']):
-            start = format_time(segment['start'])
-            end = format_time(segment['end'])
-            text = segment['text']
+def write_srt(transcription, ffile_name):
+    with open(ffile_name, "w", encoding="utf-8") as f:
+        for i, segment in enumerate(transcription["segments"]):
+            start = format_time(segment["start"])
+            end = format_time(segment["end"])
+            text = segment["text"]
             f.write(f"{i + 1}\n")
             f.write(f"{start} --> {end}\n")
             f.write(f"{text}\n\n")
