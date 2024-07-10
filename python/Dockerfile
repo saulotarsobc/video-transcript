@@ -5,6 +5,7 @@ WORKDIR /app
 COPY main.py .
 COPY .env.production .env
 COPY /utils utils
+COPY /services services
 
 # System
 # RUN apt update && apt upgrade -y;
