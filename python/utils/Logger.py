@@ -1,44 +1,25 @@
-from colorama import init, Fore
-
-init(autoreset=True)
-
+import logging
+import os
 
 class Logger:
-    def log(self, message):
-        """
-        A method that logs a message with a green color.
+    def __init__(self):
+        log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+        logging.basicConfig(
+            level=log_level,
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[
+                logging.StreamHandler()
+            ]
+        )
+        self.logger = logging.getLogger()
 
-        Parameters:
-            message (str): The message to be logged.
+    def log(self, msg):
+        self.logger.info(msg)
 
-        Returns:
-            None
-        """
-        print(f"{Fore.GREEN}{message}")
+    def info(self, msg):
+        self.logger.info(msg)
 
-    def info(self, message):
-        """
-        A method that logs a message with a yellow color.
-
-        Parameters:
-            message (str): The message to be logged.
-
-        Returns:
-            None
-        """
-        print(f"{Fore.YELLOW}{message}")
-
-    def error(self, message):
-        """
-        Print an error message in red color.
-
-        Args:
-            message (str): The error message to be printed.
-
-        Returns:
-            None
-        """
-        print(f"{Fore.RED}{message}")
-
+    def error(self, msg):
+        self.logger.error(msg)
 
 logger = Logger()
