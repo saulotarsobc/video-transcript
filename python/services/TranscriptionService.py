@@ -1,12 +1,16 @@
 import os
 import json
 import whisper
+import torch
 from utils.Logger import logger
 
 class TranscriptionService:
     def __init__(self, model_name, verbose):
-        self.model = whisper.load_model(model_name, download_root="./temp/models")
         self.verbose = verbose
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.info(f"Using device: {self.device}")
+        self.model = whisper.load_model(model_name, download_root="./temp/models")
+        self.model = self.model.to(self.device)
 
     def transcribe(self, file_name, language, task):
         logger.info(f"Transcribing ./temp/videos/{file_name} ...")
@@ -29,7 +33,6 @@ class TranscriptionService:
 
     def save_transcription(self, transcription, file_name):
         final_file_name = f"{file_name.split('.')[0]}.json"
-        
         try:
             with open(f"./temp/transcriptions/{final_file_name}", "w", encoding="utf-8") as f:
                 json.dump(transcription, f, ensure_ascii=False, indent=4)

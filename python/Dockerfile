@@ -18,7 +18,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN pip install numpy==1.23.5;
 RUN pip install python-dotenv==1.0.1;
 RUN pip install requests==2.32.3;
-RUN pip install colorama==0.4.6;
 RUN pip install -U openai-whisper;
 
 

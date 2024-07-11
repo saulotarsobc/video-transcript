@@ -19,12 +19,11 @@ model = whisper.load_model(
 
 # Transcreve o arquivo de áudio
 result = model.transcribe(
-    audio='audio.mp3',
+    audio='./code/audio.mp3',
     language='pt',
     task='transcribe',
     verbose=False,
-    temperature=0.0,
 )
 
 # Exibe a transcrição
-print(result)
+print(result['text'])
