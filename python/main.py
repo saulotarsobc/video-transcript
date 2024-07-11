@@ -3,18 +3,19 @@ from time import sleep
 import dotenv
 
 from utils.Logger import logger
+from utils.Folders import Folders
+
 from services.VideoService import VideoService
 from services.TranscriptionService import TranscriptionService
-from utils.Folders import Folders
 from services.SubtitleService import SubtitleService
 
 # env
 dotenv.load_dotenv()
 VERBOSE     =   os.getenv("VERBOSE") == "True"
-MODEL       =     os.getenv("MODEL") or "tiny"
-PAUSE       =     int(os.getenv("PAUSE") or 60)
-BASE_URL    =  os.getenv("BASE_URL")
-APP_TOKEN   = os.getenv("APP_TOKEN")
+MODEL       =   os.getenv("MODEL") or "tiny"
+PAUSE       =   int(os.getenv("PAUSE") or 60)
+BASE_URL    =   os.getenv("BASE_URL")
+APP_TOKEN   =   os.getenv("APP_TOKEN")
 
 logger.info(f"\nInitializing application... >>> Verbose={VERBOSE}, Model={MODEL}, Pause={PAUSE}, Base Url={BASE_URL}\n")
 

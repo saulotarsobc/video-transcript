@@ -1,7 +1,3 @@
 {
-  "recommendations": [
-    "hediet.vscode-drawio",
-    "ms-python.autopep8",
-    "kevinrose.vsc-python-indent"
-  ]
+  "recommendations": ["hediet.vscode-drawio"]
 }
