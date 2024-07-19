@@ -1,6 +1,7 @@
-import os
-from time import sleep
 import dotenv
+import os
+
+from time import sleep
 
 from utils.Logger import logger
 from utils.Folders import Folders
@@ -18,12 +19,12 @@ PAUSE       = int(os.getenv("PAUSE") or 60)
 BASE_URL    = os.getenv("BASE_URL")
 APP_TOKEN   = os.getenv("APP_TOKEN")
 
-logger.info(f"\nInitializing application: Verbose={VERBOSE}, Model={MODEL}, Pause={PAUSE}, Base Url={BASE_URL}\n")
+logger.info(f"\n\nInitializing application: Verbose={VERBOSE}, Model={MODEL}, Pause={PAUSE}, Base Url={BASE_URL}\n")
 
 # init services
-video_service = VideoService(BASE_URL, APP_TOKEN)
-transcription_service = TranscriptionService(MODEL, VERBOSE)
-subtitle_service = SubtitleService()
+video_service           = VideoService(BASE_URL, APP_TOKEN)
+transcription_service   = TranscriptionService(MODEL, VERBOSE)
+subtitle_service        = SubtitleService()
 
 # create folders
 Folders.create_directories()
@@ -51,4 +52,5 @@ if __name__ == "__main__":
         else:
             logger.error(f"Error getting video url for video ids={ids}")
 
-        sleep(PAUSE)
+        # sleep(PAUSE)
+        exit('Done!')
