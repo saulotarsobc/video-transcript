@@ -25,13 +25,18 @@ class VideoService:
         payload = json.dumps({"ids": ids})
         headers = self.get_headers()
 
-        response = requests.post(url, headers=headers, data=payload)
+        try:
+            response = requests.post(url, headers=headers, data=payload)
 
-        if response.status_code == 201:
-            logger.info(f"Got video url for video ids={ids}")
-            return response.json()
-        else:
-            logger.error(f"Error getting video url for video ids={ids}")
+            if response.status_code == 201:
+                logger.info(f"Got video url for video ids={ids}")
+                return response.json()
+            else:
+                logger.error(f"Error getting video url for video ids={ids}")
+                return None
+
+        except Exception as e:
+            logger.error(f"Error getting video url for video ids={ids}: {str(e)}")
             return None
 
     def download_video(self, url, file_name):

@@ -8,6 +8,7 @@ from utils.Folders import Folders
 from services.VideoService import VideoService
 from services.TranscriptionService import TranscriptionService
 from services.SubtitleService import SubtitleService
+from services.OllamaService import OllamaService
 
 # env
 dotenv.load_dotenv()
@@ -17,7 +18,7 @@ PAUSE       = int(os.getenv("PAUSE") or 60)
 BASE_URL    = os.getenv("BASE_URL")
 APP_TOKEN   = os.getenv("APP_TOKEN")
 
-logger.info(f"\nInitializing application... >>> Verbose={VERBOSE}, Model={MODEL}, Pause={PAUSE}, Base Url={BASE_URL}\n")
+logger.info(f"\nInitializing application: Verbose={VERBOSE}, Model={MODEL}, Pause={PAUSE}, Base Url={BASE_URL}\n")
 
 # init services
 video_service = VideoService(BASE_URL, APP_TOKEN)
@@ -43,6 +44,9 @@ if __name__ == "__main__":
                         transcription_service.save_transcription(transcription, item["file"]["name"])
 
                         subtitle_service.json_to_srt(transcription, item["file"]["name"])
+
+                        chat = OllamaService(file_name=item["file"]["name"])
+                        chat.generate_summary(transcription["text"])
 
         else:
             logger.error(f"Error getting video url for video ids={ids}")

@@ -41,3 +41,4 @@ class TranscriptionService:
         
         except Exception as e:
             logger.error(f"Error saving transcription {final_file_name}: {str(e)}")
+

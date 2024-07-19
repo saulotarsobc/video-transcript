@@ -17,7 +17,10 @@ class Folders:
         
         if not os.path.exists("./temp/srts"):
             os.makedirs("./temp/srts")
+        
+        if not os.path.exists("./temp/summaries"):
+            os.makedirs("./temp/summaries")
 
 
 if __name__ == "__main__":
-    CreateDirectories.create_directories()
+    Folders.create_directories()

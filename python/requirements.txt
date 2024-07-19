@@ -1,4 +1,0 @@
-numpy==1.23.5
-python-dotenv==1.0.1
-requests==2.32.3
-openai-whisper==20231117
