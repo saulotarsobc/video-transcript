@@ -2,10 +2,6 @@ services:
   trancription-server:
     image: trancription-server:1.0.0
     build: .
-    # ports:
-    #   - "8000:8000"
-    # environment:
-    #   FLASK_APP: app.py
     restart: always
     volumes:
       - ./temp:/app/temp
