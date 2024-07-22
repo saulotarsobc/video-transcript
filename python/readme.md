@@ -16,12 +16,14 @@ python3 -m venv .venv;
 source .venv/Scripts/activate; # windows
 source .venv/bin/activate; # linux
 
+pip install --upgrade pip;
 pip install numpy==1.23.5;
 pip install python-dotenv;
 pip install requests;
 pip install -U openai-whisper;
 pip install ollama;
 pip install colorama;
+pip install -U setuptools;
 
 
 python main.py;
