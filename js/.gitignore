@@ -1,7 +1,0 @@
-node_modules
-.env
-/dist
-*.mp3
-.cache
-/captions/**
-/videos/**
