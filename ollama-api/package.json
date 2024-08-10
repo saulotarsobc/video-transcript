@@ -1,0 +1,45 @@
+{
+  "name": "ollama-api",
+  "version": "1.0.0",
+  "description": "- [Ollama Download](https://ollama.com/download)\r - [Ollama Models](https://ollama.com/library)\r - [Ollama Github](https://github.com/ollama/ollama)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx --watch src/index.ts",
+    "start": "node dist/index.js",
+    "migrate": "npx prisma migrate dev --name dev",
+    "build": "npm run migrate && tsc -p tsconfig.json",
+    "preinstall": "ollama pull llama3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saulotarsobc/video-transcript.git"
+  },
+  "keywords": [
+    "ollama",
+    "llama",
+    "api",
+    "node",
+    "chat",
+    "gpt"
+  ],
+  "author": "Saulo Costa <https://github.com/saulotarsobc>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/saulotarsobc/video-transcript/issues"
+  },
+  "homepage": "https://github.com/saulotarsobc/video-transcript#readme",
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ollama": "^0.5.6"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.2.0",
+    "prisma": "^5.18.0",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4"
+  }
+}
