@@ -13,11 +13,11 @@ from services.OllamaService import OllamaService
 
 # env
 dotenv.load_dotenv()
-VERBOSE     = os.getenv("VERBOSE") == "True"
+APP_TOKEN   = os.getenv("APP_TOKEN")
+BASE_URL    = os.getenv("BASE_URL")
+VERBOSE     = os.getenv("VERBOSE") == True
 MODEL       = os.getenv("MODEL") or "tiny"
 PAUSE       = int(os.getenv("PAUSE") or 60)
-BASE_URL    = os.getenv("BASE_URL")
-APP_TOKEN   = os.getenv("APP_TOKEN")
 
 logger.info(f"\n\nInitializing application: Verbose={VERBOSE}, Model={MODEL}, Pause={PAUSE}, Base Url={BASE_URL}\n")
 
