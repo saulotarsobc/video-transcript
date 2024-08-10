@@ -1,0 +1,12 @@
+/.venv
+.env.production
+.env
+/audio.*
+/models
+/aula.*
+/*.mp4
+/temp
+
+__pycache__
+
+!audio.wav

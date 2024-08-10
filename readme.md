@@ -4,9 +4,9 @@
 
 ## Roadmap 1.0
 
-- [ ] Conversão do vídeo para audio
-- [ ] Resumo sobre o que o vídeo fala
-- [ ] Conversão para legendas
+- [x] Conversão do vídeo para audio
+- [x] Resumo sobre o que o vídeo fala
+- [x] Conversão para legendas
 
 ## Help
 
