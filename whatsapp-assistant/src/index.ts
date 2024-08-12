@@ -59,6 +59,11 @@ client.on("message", async (msg: Message) => {
     return;
   }
 
+  if (msg.from === "status@broadcast") {
+    console.log("Mensagem de status:", msg.from, msg.body);
+    return;
+  }
+
   switch (msg.type) {
     case MessageTypes.LOCATION:
       msg.reply("O formato de localização ainda não foi implementado");
@@ -71,7 +76,28 @@ client.on("message", async (msg: Message) => {
       msg.reply("O formato de documento ainda não foi implementado");
       break;
     case MessageTypes.IMAGE:
-      msg.reply("O formato de imagem ainda não foi implementado");
+      // msg.reply("O formato de imagem ainda não foi implementado");
+      console.log("Mensagem de imagem:", msg.from, msg.body);
+
+      const media = await msg.downloadMedia();
+
+      const response = await ollama.chat({
+        model: "llava",
+        messages: [
+          {
+            role: "system",
+            content: "Descreva as imagens em português",
+          },
+          {
+            role: "user",
+            content: msg.body ?? "Descreva essa imagem em português",
+            images: [media.data],
+          },
+        ],
+      });
+
+      msg.reply(response.message.content);
+
       break;
     case MessageTypes.TEXT:
       if (msg.body) {
