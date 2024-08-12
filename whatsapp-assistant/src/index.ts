@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { Client, LocalAuth, Message } from "whatsapp-web.js";
+import { Client, LocalAuth, Message, MessageTypes } from "whatsapp-web.js";
 import { PrismaClient } from "@prisma/client";
 import qrcode from "qrcode-terminal";
 import ollama from "ollama";
@@ -51,7 +51,31 @@ const enviarMensagem = ({ to, message }) => {
 };
 
 client.on("message", async (msg: Message) => {
-  if (msg.type == "chat" && msg.body) {
+  if (msg.type == MessageTypes.AUDIO) {
+    msg.reply("O formato de audio ainda não foi implementado");
+    console.log("O formato de audio ainda não foi implementado");
+    return;
+  }
+
+  if (msg.type == MessageTypes.VOICE) {
+    msg.reply("O formato de audio ainda não foi implementado");
+    console.log("O formato de audio ainda não foi implementado");
+    return;
+  }
+
+  if (msg.type == MessageTypes.DOCUMENT) {
+    msg.reply("O formato de documento ainda não foi implementado");
+    console.log("O formato de documento ainda não foi implementado");
+    return;
+  }
+
+  if (msg.type == MessageTypes.IMAGE) {
+    msg.reply("O formato de imagem ainda não foi implementado");
+    console.log("O formato de imagem ainda não foi implementado");
+    return;
+  }
+
+  if (msg.type == MessageTypes.TEXT && msg.body) {
     console.log(msg.body);
     ollamaChat(msg);
   }
@@ -73,10 +97,17 @@ async function ollamaChat(msg: Message) {
     userId: msg.from,
   });
 
-  const messages = historico.map((m) => ({
-    role: m.role,
-    content: m.message,
-  }));
+  const messages = [
+    {
+      role: "system",
+      content:
+        "Você está no controle do whatsapp do Saulo Costa, um desenvololvedor web. Seja sempre respeitoso e cordial. Lembre-se de dar resposas de forma clara e concisa.",
+    },
+    ...historico.map((m) => ({
+      role: m.role,
+      content: m.message,
+    })),
+  ];
 
   ollama
     .chat({
