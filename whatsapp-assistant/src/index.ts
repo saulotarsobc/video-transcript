@@ -51,7 +51,7 @@ const enviarMensagem = ({ to, message }) => {
 };
 
 client.on("message", async (msg: Message) => {
-  if (msg.type == "chat") {
+  if (msg.type == "chat" && msg.body) {
     console.log(msg.body);
     ollamaChat(msg);
   }
