@@ -9,13 +9,13 @@
 
 # Roadmap
 
-- [✅] Ollama
-- [✅] Llama
+- ✅ Ollama
+- ✅ Llama
 
   ![llama](./images/llama.png)
 
-- [✅] Llava
+- ✅ Llava
 
   ![llava](./images/llava.png)
 
-- [ ] Whisper
+- ❌ Whisper
