@@ -11,6 +11,9 @@
 
 - [✅] Ollama
 - [✅] Llama
+
+  ![llama](./images/llama.png)
+
 - [✅] Llava
 
   ![llava](./images/llava.png)
