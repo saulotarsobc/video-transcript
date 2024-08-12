@@ -1,11 +1,7 @@
-import dotenv from "dotenv";
 import { Client, LocalAuth, Message, MessageTypes } from "whatsapp-web.js";
 import { PrismaClient } from "@prisma/client";
 import qrcode from "qrcode-terminal";
 import ollama from "ollama";
-
-// Configuração do dotenv
-dotenv.config();
 
 // Inicialização do cliente do WhatsApp
 const client = new Client({
@@ -68,37 +64,20 @@ client.on("message", async (msg: Message) => {
     case MessageTypes.LOCATION:
       msg.reply("O formato de localização ainda não foi implementado");
       break;
+
     case MessageTypes.AUDIO:
     case MessageTypes.VOICE:
       msg.reply("O formato de áudio ainda não foi implementado");
       break;
+
     case MessageTypes.DOCUMENT:
       msg.reply("O formato de documento ainda não foi implementado");
       break;
+
     case MessageTypes.IMAGE:
-      // msg.reply("O formato de imagem ainda não foi implementado");
-      console.log("Mensagem de imagem:", msg.from, msg.body);
-
-      const media = await msg.downloadMedia();
-
-      const response = await ollama.chat({
-        model: "llava",
-        messages: [
-          {
-            role: "system",
-            content: "Descreva as imagens em português",
-          },
-          {
-            role: "user",
-            content: msg.body ?? "Descreva essa imagem em português",
-            images: [media.data],
-          },
-        ],
-      });
-
-      msg.reply(response.message.content);
-
+      ollamaImagem(msg);
       break;
+
     case MessageTypes.TEXT:
       if (msg.body) {
         console.log(msg.body);
@@ -106,6 +85,7 @@ client.on("message", async (msg: Message) => {
         await ollamaChat(msg);
       }
       break;
+
     default:
       console.log("Tipo de mensagem não suportado:", msg.type);
   }
@@ -113,7 +93,7 @@ client.on("message", async (msg: Message) => {
 
 /* ---------- Funções Ollama ---------- */
 
-async function ollamaChat(msg: Message) {
+const ollamaChat = async (msg: Message) => {
   console.log(">>> Mensagem em Ollama");
 
   await adicionarAoHistorico({
@@ -151,7 +131,56 @@ async function ollamaChat(msg: Message) {
   } catch (error) {
     console.log("Erro no Ollama:", error);
   }
-}
+};
+
+const ollamaImagem = async (msg: Message) => {
+  console.log("Mensagem de imagem:", msg.from, msg.body);
+
+  const media = await msg.downloadMedia();
+
+  const response = await ollama
+    .chat({
+      model: "llava",
+      messages: [
+        {
+          role: "system",
+          content: "Descreva as imagens em português",
+        },
+        {
+          role: "user",
+          content: msg.body ?? "Descreva essa imagem em português",
+          images: [media.data],
+        },
+      ],
+    })
+    .then((response) => {
+      console.log(">>> Resposta do Ollama:", response.message.content);
+      return response;
+    })
+    .catch((error) => {
+      console.log("Erro no Ollama:", error);
+      return;
+    });
+
+  if (response) {
+    // adionar prompt ao historico
+    await adicionarAoHistorico({
+      userId: msg.from,
+      message: msg.body ?? "Descreva essa imagem em português",
+      role: "user",
+    });
+
+    // adicionar descricão ao historico
+    await adicionarAoHistorico({
+      userId: msg.from,
+      message: "O usuário enviou uma imagem: " + response.message.content,
+      role: "assistant",
+    });
+
+    // enviar resposta para o usuário
+    msg.reply(response.message.content);
+  }
+};
 
 /* ---------- Funções Prisma ---------- */
 

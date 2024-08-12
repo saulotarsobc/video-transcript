@@ -16,4 +16,25 @@ const chat = async (text: string) => {
   }
 };
 
-chat("conte do numero um até o cinco");
+// chat("conte do numero um até o cinco");
+
+// ollama
+//   .embed({
+//     input: "caramelo",
+//     model: "llama3.1",
+//   })
+//   .then((response) => console.log(response))
+//   .catch((error) => console.log(error));
+
+async function criarModelo() {
+  try {
+    const response = await ollama.create({
+      model: "llama3.1",
+    });
+    console.log("Modelo criado com sucesso:", response);
+  } catch (error) {
+    console.error("Erro ao criar o modelo:", error);
+  }
+}
+
+criarModelo();
