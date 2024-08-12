@@ -7,7 +7,7 @@
     "dev": "tsx --watch src/index.ts",
     "start": "node dist/index.js",
     "migrate": "npx prisma migrate dev --name dev",
-    "build": "npm run migrate && tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json",
     "preinstall": "ollama pull llama3.1 && ollama pull llava"
   },
   "repository": {
