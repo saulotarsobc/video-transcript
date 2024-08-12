@@ -12,6 +12,7 @@
 - [✅] Ollama
 - [✅] Llama
 - [✅] Llava
+
   ![llava](./images/llava.png)
 
 - [ ] Whisper
