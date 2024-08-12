@@ -32,7 +32,7 @@
     "@prisma/client": "^5.18.0",
     "ollama": "^0.5.7",
     "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.25.0"
+    "whatsapp-web.js": "^1.24.0"
   },
   "devDependencies": {
     "@types/node": "^22.2.0",
