@@ -43,7 +43,7 @@ const enviarMensagem = ({ to, message }) => {
   client
     .sendMessage(to, message)
     .then((message) => {
-      console.log("Mensagem enviada:", message);
+      console.log(`Mensagem enviada: ${message.id.remote}`);
     })
     .catch((error) => {
       console.log("Erro ao enviar mensagem:", error);
