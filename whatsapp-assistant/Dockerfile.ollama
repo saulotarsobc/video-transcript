@@ -1,0 +1,10 @@
+# Dockerfile.ollama
+FROM ollama/ollama
+
+# WORKDIR /root
+
+COPY /ollama.sh ollama.sh
+
+EXPOSE 11434
+
+ENTRYPOINT ["sh", "ollama.sh"]
