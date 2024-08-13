@@ -4,9 +4,8 @@ services:
     container_name: ollama
     build:
       context: .
-      dockerfile: Dockerfile.ollama
+      dockerfile: Dockerfile
     volumes:
+      - ./data/zapzap:/app/zapzap
       - ./data/.ollama:/root/.ollama
-    ports:
-      - "11434:11434"
     restart: always

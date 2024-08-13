@@ -9,6 +9,10 @@ const client = new Client({
     dataPath: "./data/zapzap",
     clientId: "zap-1",
   }),
+  puppeteer: {
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    headless: true,
+  },
 });
 
 client.initialize();
