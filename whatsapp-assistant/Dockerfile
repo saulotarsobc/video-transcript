@@ -1,5 +1,6 @@
-# Dockerfile.ollama
 FROM node:20
+
+WORKDIR /app
 
 RUN apt-get update && \
     apt-get install -y \
@@ -29,17 +30,15 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*;
 
-WORKDIR /app
-
 COPY /package.json package.json
 COPY /package-lock.json package-lock.json
 COPY /src src
 COPY /tsconfig.json tsconfig.json
 COPY /prisma prisma
 COPY /.env.prod .env
-COPY /ollama.sh ollama.sh
 
-RUN curl -fsSL https://ollama.com/install.sh | sh;
+RUN npm install --force;
+RUN npm run migrate;
+RUN npm run build;
 
-ENTRYPOINT ["sh", "ollama.sh"]
-# CMD [ "tail", "-f", "/dev/null" ]
+CMD [ "npm", "start" ];

@@ -6,6 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./data/zapzap:/app/zapzap
-      - ./data/.ollama:/root/.ollama
+      - ./ollama:/root/.ollama
+      - ./zapzap:/app/zapzap
     restart: always

@@ -6,7 +6,7 @@ import ollama from "ollama";
 // Inicialização do cliente do WhatsApp
 const client = new Client({
   authStrategy: new LocalAuth({
-    dataPath: "./data/zapzap",
+    dataPath: "./zapzap",
     clientId: "zap-1",
   }),
   puppeteer: {
@@ -95,6 +95,34 @@ client.on("message", async (msg: Message) => {
   }
 });
 
+/* ---------- Funções de Actions ---------- */
+
+// Função para identificar a action solicitada pelo usuário e executá-la
+const processarAction = async (action: string, msg: Message) => {
+  switch (action) {
+    case "consultarBanco":
+      const dados = await consultarBanco(msg.from);
+      enviarMensagem({ to: msg.from, message: `Dados encontrados: ${dados}` });
+      break;
+
+    case "enviarSaudacao":
+      enviarMensagem({
+        to: msg.from,
+        message: "Olá! Como posso ajudar você hoje?",
+      });
+      break;
+
+    default:
+      enviarMensagem({ to: msg.from, message: "Ação não reconhecida." });
+  }
+};
+
+// Função para consultar banco de dados (exemplo)
+const consultarBanco = async (userId: string) => {
+  const historico = await historicoCompleto({ userId });
+  return historico.map((item) => item.message).join(", ");
+};
+
 /* ---------- Funções Ollama ---------- */
 
 const ollamaChat = async (msg: Message) => {
@@ -112,26 +140,36 @@ const ollamaChat = async (msg: Message) => {
     {
       role: "system",
       content:
-        "Você está no controle do whatsapp do Saulo Costa, um desenvolvedor web. Seja sempre respeitoso e cordial. Lembre-se de dar respostas de forma clara e concisa.",
+        "Você está no controle do WhatsApp do Saulo Costa, um desenvolvedor web. Ao interagir com o usuário, identifique se a solicitação corresponde a uma ação específica. Se o usuário pedir para ver o histórico, dados, ou mensagens anteriores, responda apenas com 'action: consultarBanco'. Para saudações como 'Oi', responda com 'action: enviarSaudacao'. Em todos os outros casos, responda com uma mensagem adequada sem ações.",
     },
     ...historico.map((m) => ({ role: m.role, content: m.message })),
   ];
 
   try {
     const response = await ollama.chat({
-      model: "llama3.1",
+      model: "llama3.2",
       messages,
     });
 
-    console.log(">>> Resposta do Ollama:", response.message.content);
+    console.log(">>> Resposta completa do Ollama:", response.message.content);
 
-    await adicionarAoHistorico({
-      userId: msg.from,
-      message: response.message.content,
-      role: "assistant",
-    });
+    // Verifica se a resposta contém uma action
+    const actionRegex = /action:\s*(\w+)/;
+    const match = response.message.content.match(actionRegex);
 
-    enviarMensagem({ to: msg.from, message: response.message.content });
+    if (match) {
+      const action = match[1];
+      await processarAction(action, msg);
+    } else {
+      // Caso não tenha action, envia a resposta normal
+      await adicionarAoHistorico({
+        userId: msg.from,
+        message: response.message.content,
+        role: "assistant",
+      });
+
+      enviarMensagem({ to: msg.from, message: response.message.content });
+    }
   } catch (error) {
     console.log("Erro no Ollama:", error);
   }
@@ -144,7 +182,7 @@ const ollamaImagem = async (msg: Message) => {
 
   const response = await ollama
     .chat({
-      model: "llava",
+      model: "llava-llama3",
       messages: [
         {
           role: "system",
@@ -167,14 +205,14 @@ const ollamaImagem = async (msg: Message) => {
     });
 
   if (response) {
-    // adionar prompt ao historico
+    // adicionar prompt ao histórico
     await adicionarAoHistorico({
       userId: msg.from,
       message: msg.body ?? "Descreva essa imagem em português",
       role: "user",
     });
 
-    // adicionar descricão ao historico
+    // adicionar descrição ao histórico
     await adicionarAoHistorico({
       userId: msg.from,
       message: "O usuário enviou uma imagem: " + response.message.content,

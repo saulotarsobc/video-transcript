@@ -29,16 +29,16 @@
   },
   "homepage": "https://github.com/saulotarsobc/video-transcript#readme",
   "dependencies": {
-    "@prisma/client": "^5.18.0",
-    "ollama": "^0.5.7",
+    "@prisma/client": "^5.22.0",
+    "ollama": "^0.5.9",
     "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.24.0"
+    "whatsapp-web.js": "^1.23.0"
   },
   "devDependencies": {
-    "@types/node": "^22.2.0",
+    "@types/node": "^22.9.0",
     "@types/qrcode-terminal": "^0.12.2",
-    "prisma": "^5.18.0",
-    "tsx": "^4.17.0",
-    "typescript": "^5.5.4"
+    "prisma": "^5.22.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
   }
 }
