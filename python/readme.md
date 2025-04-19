@@ -7,6 +7,10 @@
 - [Best FREE Speech to Text AI - Whisper AI](https://youtu.be/8SQV-B83tPU)
 - [How to Install & Use Whisper AI Voice to Text](https://youtu.be/ABFqbY_rmEk)
 
+## Models
+
+> https://github.com/openai/whisper/blob/main/whisper/__init__.py#L17-L32
+
 ## Start
 
 ### on local
