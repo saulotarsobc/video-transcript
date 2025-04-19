@@ -11,7 +11,7 @@
 
 ### on local
 
-```sh
+```bash
 python3 -m venv .venv;
 source .venv/Scripts/activate; # windows
 source .venv/bin/activate; # linux
@@ -28,11 +28,19 @@ pip install -U setuptools;
 
 python main.py;
 
+# Turbo
 whisper \
-    --model_dir temp \
-    --model tiny audio.wav \
-    --output_dir temp \
-    -f json --language en;
+    --model_dir 'temp' \
+    --model turbo './code/audio.mp3' \
+    --output_dir 'temp' \
+    -f json --language 'pt';
+
+# Tiny
+whisper \
+    --model_dir 'temp' \
+    --model tiny './code/audio.mp3' \
+    --output_dir 'temp' \
+    -f json --language 'pt';
 ```
 
 ```sh
