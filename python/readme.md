@@ -13,34 +13,20 @@
 
 ```bash
 python3 -m venv .venv;
-source .venv/Scripts/activate; # windows
+. '.\.venv\Scripts\Activate.ps1'; # powershel
+source .venv/Scripts/activate; # windows git bash
 source .venv/bin/activate; # linux
 
 python -m pip install --upgrade pip;
-pip install numpy==1.23.5;
-pip install python-dotenv;
-pip install requests;
-pip install -U openai-whisper;
-pip install ollama;
-pip install colorama;
-pip install -U setuptools;
-
+pip install -r 'requirements.txt';
 
 python main.py;
 
-# Turbo
-whisper \
-    --model_dir 'temp' \
-    --model turbo './code/audio.mp3' \
-    --output_dir 'temp' \
-    -f json --language 'pt';
-
 # Tiny
-whisper \
-    --model_dir 'temp' \
-    --model tiny './code/audio.mp3' \
-    --output_dir 'temp' \
-    -f json --language 'pt';
+whisper --model_dir 'temp' --model tiny './code/audio.mp3' --output_dir 'temp' -f json --language 'pt';
+
+# Turbo
+whisper --model_dir 'temp' --model turbo './code/audio.mp3' --output_dir 'temp' -f json --language 'pt';
 ```
 
 ```sh
