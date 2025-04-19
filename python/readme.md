@@ -39,6 +39,9 @@ whisper --model_dir 'temp/models' --model large './code/audio.mp3' --output_dir 
 
 # large-v2
 whisper --model_dir 'temp/models' --model large-v2 './code/audio.mp3' --output_dir 'temp' -f json --language 'pt';
+
+# turbo
+whisper --model_dir 'temp/models' --model turbo './code/audio.mp3' --output_dir 'temp' -f json --language 'pt';
 ```
 
 ## FFMPEG
