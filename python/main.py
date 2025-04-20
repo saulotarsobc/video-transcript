@@ -12,10 +12,11 @@ from services.OllamaService import OllamaService
 
 # env
 dotenv.load_dotenv()
-PORT        = os.getenv("PORT")
-VERBOSE     = os.getenv("VERBOSE") == True
-MODEL       = os.getenv("MODEL") or "tiny"
-DEBUG       = os.getenv("DEBUG") == True
+PORT            = os.getenv("PORT")
+VERBOSE         = os.getenv("VERBOSE") == True
+MODEL           = os.getenv("MODEL") or "tiny"
+DEBUG           = os.getenv("DEBUG") == True
+OLLAMA_MODEL    = os.getenv("OLLAMA_MODEL") or "llama3.2"
 
 # init Flask
 app = Flask(__name__)
@@ -53,7 +54,7 @@ def process_video():
             transcription_service.save_transcription(transcription, original_filename)
             subtitle_service.json_to_srt(transcription, original_filename)
             
-            chat = OllamaService(file_name=original_filename)
+            chat = OllamaService(model=OLLAMA_MODEL, file_name=original_filename)
             chat.generate_summary(transcription["text"])
             
             return jsonify({'message': 'Video processed successfully'}), 200

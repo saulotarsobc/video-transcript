@@ -2,7 +2,7 @@ import ollama
 from utils.Logger import logger
 
 class OllamaService:
-    def __init__(self, model='llama3', file_name=None):
+    def __init__(self, model=None, file_name=None):
         self.model = model
         self.file_name = file_name
 

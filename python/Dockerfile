@@ -18,7 +18,7 @@ RUN pip install numpy==1.23.5 python-dotenv requests -U openai-whisper ollama co
 # Ollama
 RUN curl https://ollama.ai/install.sh | sh
 RUN which ollama
-RUN ollama serve & sleep 5 && ollama pull llama3.1
+RUN ollama serve & sleep 5 && ollama pull llama3.2.1
 
 
 # CMD ["tail", "-f", "/dev/null"]

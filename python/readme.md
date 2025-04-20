@@ -63,3 +63,18 @@ ffmpeg -y -i video.mp4 -b:a 10k audio.wav;
 # juntar um video com uma legenda
 ffmpeg -i video.mp4 -i aula.srt -c copy -c:s mov_text -metadata:s:s:0 language=pt -metadata:s:s:0 title=Portuguese aula_legendada.mp4 -y;
 ```
+
+## Ollama
+
+```ps1
+# Install
+winget install ollama;
+
+# Download llama3.2
+ollama pull llama3.2;
+
+# Run
+ollama run llama3.2;
+# Run with prompt
+ollama run llama3.2 -p "Hello, my name is";
+```
