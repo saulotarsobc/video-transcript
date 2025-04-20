@@ -69,6 +69,7 @@
             border-radius: 5px;
             background: #f9f9f9;
             display: none;
+            white-space: pre-wrap;
         }
         .current-status {
             text-align: center;
@@ -121,7 +122,7 @@
             Ready to process...
         </div>
 
-        <div id="summary"></div>
+        <div id="summary" class="summary-container"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
@@ -150,9 +151,12 @@
             if (data.step) {
                 updateSteps(data.step);
             }
-            if (data.summary) {
+            if (data.success && data.summary) {
                 summaryDiv.style.display = 'block';
-                summaryDiv.innerHTML = `<h3>Summary:</h3><p>${data.summary}</p>`;
+                summaryDiv.innerHTML = `
+                    <h3>Video Summary</h3>
+                    <div class="summary-text">${data.summary.replace(/\n/g, '<br>')}</div>
+                `;
             }
         });
 

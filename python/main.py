@@ -69,22 +69,14 @@ def process_video():
             
             socketio.emit('status', {'step': 6, 'message': 'Generating summary...'})
             chat = OllamaService(model=OLLAMA_MODEL, file_name=original_filename)
-            prompt = f"""Analyze the following transcript and create a comprehensive summary. Focus on:
-1. Main topic or central theme
-2. Key points and important details
-3. Major conclusions or outcomes
-4. Important names, dates, or specific data mentioned
-
-Please structure the summary in clear paragraphs and maintain a professional tone.
-
-Transcript:
-{transcription["text"]}
-
-Generate a summary in Portuguese:"""
-
-            summary = chat.generate_summary(prompt)
+            summary = chat.generate_summary(transcription["text"])
             
-            socketio.emit('status', {'step': 7, 'message': 'Processing completed!', 'summary': summary})
+            socketio.emit('status', {
+                'step': 7, 
+                'message': 'Processing completed!',
+                'summary': summary,
+                'success': True
+            })
             return jsonify({'message': 'Video processed successfully', 'summary': summary}), 200
         
         return jsonify({'error': 'Transcription failed'}), 500
