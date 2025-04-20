@@ -155,7 +155,6 @@
             }
             
             if (data.success && data.summary) {
-                console.log("Displaying summary:", data.summary);  // Debug log
                 summaryDiv.style.display = 'block';
                 summaryDiv.innerHTML = `
                     <h3>Video Summary</h3>
@@ -167,7 +166,7 @@
         form.onsubmit = async (e) => {
             e.preventDefault();
             summaryDiv.style.display = 'none';
-            summaryDiv.innerHTML = '';  // Clear previous summary
+            summaryDiv.innerHTML = '';
             currentStatus.textContent = 'Starting process...';
             updateSteps(1);
             
@@ -181,7 +180,11 @@
                     body: formData
                 });
                 const result = await response.json();
-                console.log('API Response:', result);  // Debug log
+                console.log('API Response:', result);
+                
+                if (!response.ok) {
+                    throw new Error(result.error || 'Process failed');
+                }
                 
                 if (result.success && result.summary) {
                     summaryDiv.style.display = 'block';
@@ -193,6 +196,7 @@
             } catch (error) {
                 console.error('Error:', error);
                 currentStatus.textContent = 'Error: ' + error.message;
+                updateSteps(1); // Reset steps on error
             }
         };
     </script>

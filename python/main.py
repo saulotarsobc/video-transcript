@@ -54,12 +54,25 @@ def process_video():
 
         # Transcribe
         socketio.emit('status', {'step': 3, 'message': 'Starting transcription...'})
-        transcription = transcription_service.transcribe(
-            original_filename, 
-            language="pt",
-            task="transcribe"
-        )
+        try:
+            transcription = transcription_service.transcribe(
+                original_filename, 
+                language="pt",
+                task="transcribe"
+            )
+            
+            if not transcription:
+                logger.error("Transcription returned None")
+                raise Exception("Transcription failed - no output generated")
+                
+            logger.info(f"Transcription successful, text length: {len(transcription.get('text', ''))}")
+            
+        except Exception as e:
+            logger.error(f"Transcription error: {str(e)}")
+            socketio.emit('status', {'step': 3, 'message': f'Transcription failed: {str(e)}'})
+            return jsonify({'error': f'Transcription failed: {str(e)}'}), 500
 
+        # Continue with rest of process if transcription successful
         if transcription is not None:
             socketio.emit('status', {'step': 4, 'message': 'Saving transcription...'})
             transcription_service.save_transcription(transcription, original_filename)
@@ -69,38 +82,22 @@ def process_video():
             
             socketio.emit('status', {'step': 6, 'message': 'Generating summary...'})
             chat = OllamaService(model=OLLAMA_MODEL, file_name=original_filename)
-            try:
-                summary = chat.generate_summary(transcription["text"])
-                
-                if summary:
-                    socketio.emit('status', {
-                        'step': 7, 
-                        'message': 'Processing completed!',
-                        'summary': summary,
-                        'success': True
-                    })
-                    logger.info(f"Summary generated: {summary[:100]}...")  # Log first 100 chars
-                    return jsonify({
-                        'message': 'Video processed successfully',
-                        'summary': summary,
-                        'success': True
-                    }), 200
-            except Exception as e:
-                logger.error(f"Summary generation error: {str(e)}")
-                socketio.emit('status', {
-                    'step': 7,
-                    'message': f'Summary generation failed: {str(e)}',
-                    'success': False
-                })
-                return jsonify({
-                    'message': 'Video processed but summary failed',
-                    'success': False
-                }), 200
-        
-        return jsonify({'error': 'Transcription failed'}), 500
+            summary = chat.generate_summary(transcription["text"])
+            
+            socketio.emit('status', {
+                'step': 7, 
+                'message': 'Processing completed!',
+                'summary': summary,
+                'success': True
+            })
+            return jsonify({
+                'message': 'Video processed successfully',
+                'summary': summary,
+                'success': True
+            }), 200
 
     except Exception as e:
-        logger.error(f"Error processing video: {str(e)}")
+        logger.error(f"Process error: {str(e)}")
         socketio.emit('status', {'message': f'Error: {str(e)}'})
         return jsonify({'error': str(e)}), 500
 
