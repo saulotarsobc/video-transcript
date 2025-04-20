@@ -23,48 +23,12 @@ os.makedirs("./temp/transcriptions", exist_ok=True)
 
 ## load model
 model = whisper.load_model(
-    MODEL,
+    WHISPER_MODEL,
     download_root="./temp/models",
 )
 
 ## init logger
 logger = Logger()
-
-
-# debug
-global_videos = [
-    {
-        "id": 1,
-        "ffile_name": "esportes-diversao-garantida",
-        "name": "Esportes — Com estas dicas a diversão é garantida!",
-        "url": "https://download-a.akamaihd.net/files/content_assets/a5/502018215_T_cnt_1_r720P.mp4",
-        "course": {
-            "name": "Quadro Branco",
-            "subtitle": "Nesse video vamos aprender como nos divertir da forma correta!",
-        },
-    },
-    {
-        "id": 2,
-        "ffile_name": "amigos-de-jeova-jeremias",
-        "name": "Vamos Aprender com os Amigos de Jeová — Jeremias",
-        "url": "https://download-a.akamaihd.net/files/media_publication/92/ljf_T_002_r240P.mp4",
-        "course": {
-            "name": "Vamos Aprender com os Amigos de Jeová",
-            "subtitle": "Nesse video vamos aprender comoo demostar a coragem que os Amigos de Jeová tem! Em especial o profeta Jeremias.",
-        },
-    },
-    {
-        "id": 3,
-        "ffile_name": "boletim-4",
-        "name": "Boletim do Corpo Governante (2024) — n.º 4",
-        "url": "https://download-a.akamaihd.net/files/content_assets/2a/1112024011_T_cnt_1_r360P.mp4",
-        "course": {
-            "name": "Boletim do Corpo Governante",
-            "subtitle": "Nesse boletim veremos o que nossos irmão estão achando sobre o congresso Regional de 2024",
-        },
-    },
-]
-
 
 def getVideos():
     """
@@ -168,7 +132,7 @@ def transcribe(prompt, ffile_name, language, task):
 
     except Exception as e:
         logger.error(
-            f"Error transcribing /temp/videos/{ffile_name}/video.mp4: {str(e)}"
+            f"Error transcribing video {ffile_name}: {str(e)}"
         )
         return None
 

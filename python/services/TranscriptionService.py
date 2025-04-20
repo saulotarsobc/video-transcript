@@ -8,27 +8,35 @@ class TranscriptionService:
     def __init__(self, model, verbose):
         self.verbose = verbose
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Using device: {self.device}")
         self.model = whisper.load_model(model, download_root="./temp/models")
         self.model = self.model.to(self.device)
 
-    def transcribe(self, file_name, language, task):
-        logger.info(f"Transcribing ./temp/videos/{file_name} ...")
+        logger.info(f"Using device: {self.device}")
+
+    def transcribe(self, file_name, language="pt", task="transcribe"):
+        logger.info(f"Transcribing {file_name} with language {language} and task {task} with model {self.model}")
         try:
             result = self.model.transcribe(
-                audio=f"./temp/videos/{file_name}",
+                audio= f"./temp/videos/{file_name}",
                 language=language,
-                task=task,
-                initial_prompt="Gere a transcrição de um video",
-                verbose=self.verbose,
+                task=task
             )
             
-            logger.log(f"Transcribed {file_name}!")
+            # Filter out low confidence segments
+            filtered_segments = [
+                seg for seg in result["segments"]
+                if seg["avg_logprob"] > -0.3 and seg["compression_ratio"] > 1.0
+            ]
             
+            # Rebuild the text from filtered segments
+            if filtered_segments:
+                result["segments"] = filtered_segments
+                result["text"] = " ".join(seg["text"].strip() for seg in filtered_segments)
+
             return result
         
         except Exception as e:
-            logger.error(f"Error transcribing /temp/videos/{file_name}: {str(e)}")
+            logger.error(f"Error transcribing {file_name}: {str(e)}")
             return None
 
     def save_transcription(self, transcription, file_name):

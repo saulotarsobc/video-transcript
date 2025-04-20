@@ -13,20 +13,21 @@ from services.OllamaService import OllamaService
 # env
 dotenv.load_dotenv()
 PORT            = os.getenv("PORT")
-VERBOSE         = os.getenv("VERBOSE") == True
+VERBOSE         = os.getenv("VERBOSE") == 'True'
 WHISPER_MODEL   = os.getenv("WHISPER_MODEL") or "tiny"
-DEBUG           = os.getenv("DEBUG") == True
+DEBUG           = os.getenv("DEBUG") == 'True'
 OLLAMA_MODEL    = os.getenv("OLLAMA_MODEL") or "llama3.2"
 
 # init Flask
 app = Flask(__name__)
 
 # init services
-transcription_service   = TranscriptionService(model=WHISPER_MODEL, verbose=VERBOSE)
+transcription_service   = TranscriptionService(WHISPER_MODEL, VERBOSE)
 subtitle_service        = SubtitleService()
 
-# Ensure temp/videos directory exists
-os.makedirs('temp/videos', exist_ok=True)
+# Create directories
+folders = Folders()
+folders.create_directories()
 
 @app.route('/process-video', methods=['POST'])
 def process_video():
