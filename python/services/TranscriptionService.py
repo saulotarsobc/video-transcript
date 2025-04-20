@@ -5,11 +5,11 @@ import torch
 from utils.Logger import logger
 
 class TranscriptionService:
-    def __init__(self, model_name, verbose):
+    def __init__(self, model, verbose):
         self.verbose = verbose
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Using device: {self.device}")
-        self.model = whisper.load_model(model_name, download_root="./temp/models")
+        self.model = whisper.load_model(model, download_root="./temp/models")
         self.model = self.model.to(self.device)
 
     def transcribe(self, file_name, language, task):

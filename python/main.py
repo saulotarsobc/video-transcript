@@ -14,7 +14,7 @@ from services.OllamaService import OllamaService
 dotenv.load_dotenv()
 PORT            = os.getenv("PORT")
 VERBOSE         = os.getenv("VERBOSE") == True
-MODEL           = os.getenv("MODEL") or "tiny"
+WHISPER_MODEL   = os.getenv("WHISPER_MODEL") or "tiny"
 DEBUG           = os.getenv("DEBUG") == True
 OLLAMA_MODEL    = os.getenv("OLLAMA_MODEL") or "llama3.2"
 
@@ -22,7 +22,7 @@ OLLAMA_MODEL    = os.getenv("OLLAMA_MODEL") or "llama3.2"
 app = Flask(__name__)
 
 # init services
-transcription_service   = TranscriptionService(MODEL, VERBOSE)
+transcription_service   = TranscriptionService(model=WHISPER_MODEL, verbose=VERBOSE)
 subtitle_service        = SubtitleService()
 
 # Ensure temp/videos directory exists
@@ -55,7 +55,20 @@ def process_video():
             subtitle_service.json_to_srt(transcription, original_filename)
             
             chat = OllamaService(model=OLLAMA_MODEL, file_name=original_filename)
-            chat.generate_summary(transcription["text"])
+            prompt = f"""Analyze the following transcript and create a comprehensive summary. Focus on:
+1. Main topic or central theme
+2. Key points and important details
+3. Major conclusions or outcomes
+4. Important names, dates, or specific data mentioned
+
+Please structure the summary in clear paragraphs and maintain a professional tone.
+
+Transcript:
+{transcription["text"]}
+
+Generate a summary in Portuguese:"""
+
+            chat.generate_summary(prompt)
             
             return jsonify({'message': 'Video processed successfully'}), 200
         
@@ -66,5 +79,5 @@ def process_video():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
-    logger.info(f"\n\nInitializing application: Model={MODEL}\n")
+    logger.info(f"\n\nInitializing application: Wispher Model: {WHISPER_MODEL} | Ollama Model: {OLLAMA_MODEL}\n")
     app.run(host='0.0.0.0', port=PORT, debug=DEBUG)
