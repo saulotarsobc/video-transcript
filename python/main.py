@@ -109,5 +109,5 @@ def process_video():
 
 if __name__ == "__main__":
     logger.info("================= Starting application =================")
-    logger.info(f"Initializing application | Port: {PORT} | Ollam Model: {OLLAMA_MODEL} | Whisper Model {WHISPER_MODEL}")
+    logger.info(f"Initializing application | Port: {PORT} | Ollam Model: \"{OLLAMA_MODEL}\" | Whisper Model \"{WHISPER_MODEL}\"")
     socketio.run(app, host='0.0.0.0', port=PORT, debug=DEBUG)

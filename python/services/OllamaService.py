@@ -3,6 +3,7 @@ from utils.Logger import logger
 
 class OllamaService:
     def __init__(self, model=None, file_name=None):
+        self.client = ollama.Client()
         self.model = model
         self.file_name = file_name
 
@@ -21,7 +22,7 @@ class OllamaService:
         logger.info(f"Starting OllamaService.chat for {self.file_name}...")
         
         try:
-            response = ollama.chat(
+            response = self.client.chat(
                 model=self.model,
                 messages=[{
                     'role': 'user',
@@ -43,7 +44,7 @@ class OllamaService:
         logger.info(f"Starting OllamaService.generate_summary for {self.file_name}...")
         
         try:
-            response = ollama.chat(
+            response = self.client.chat(
                 model=self.model,
                 messages=[{
                     'role': 'user',
@@ -56,7 +57,7 @@ class OllamaService:
             logger.info("Success on OllamaService.generate_summary")
 
         except Exception as e:
-            logger.info("Error on OllamaService.generate_summary")
+            logger.error("Error on OllamaService.generate_summary")
             logger.error(f'Error: {e}')
 
 # Uso da classe

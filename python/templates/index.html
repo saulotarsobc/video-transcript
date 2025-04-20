@@ -1,80 +1,174 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Video Transcription</title>
+    <title>Video Transcription Service</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Poppins', sans-serif;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 40px 20px;
+            background-color: #f0f2f5;
+            color: #1a1a1a;
         }
+
         .container {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #4CAF50;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .upload-area:hover {
+            background: #e8f5e9;
+            border-color: #2e7d32;
+        }
+
+        .upload-area.dragging {
+            background: #e8f5e9;
+            border-color: #2e7d32;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        /* Stepper */
         .stepper {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 40px 0;
+            margin: 60px 0;
             position: relative;
         }
+
         .stepper::before {
             content: '';
             position: absolute;
-            height: 2px;
+            height: 3px;
             width: 100%;
-            background: #ddd;
+            background: #e0e0e0;
             z-index: 1;
         }
+
         .step {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: white;
-            border: 2px solid #ddd;
+            border: 3px solid #e0e0e0;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             z-index: 2;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
+
         .step.active {
             border-color: #4CAF50;
             background: #4CAF50;
             color: white;
+            box-shadow: 0 0 10px rgba(76,175,80,0.5);
         }
+
         .step.completed {
             border-color: #4CAF50;
             background: #4CAF50;
             color: white;
         }
+
         .step-label {
             position: absolute;
-            top: 45px;
-            font-size: 12px;
+            top: 60px;
+            font-size: 14px;
             white-space: nowrap;
+            color: #666;
+            font-weight: 500;
         }
-        #uploadForm {
-            margin: 20px 0;
-        }
-        #summary {
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #f9f9f9;
-            display: none;
-            white-space: pre-wrap;
-        }
+
+        /* Status */
         .current-status {
             text-align: center;
-            margin: 20px 0;
-            color: #666;
+            margin: 30px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* Summary */
+        .summary-container {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+        }
+
+        .summary-container h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4CAF50;
+        }
+
+        .summary-text {
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Button */
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #2e7d32;
+            transform: translateY(-2px);
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .processing .step.active {
+            animation: pulse 1.5s infinite;
         }
     </style>
 </head>
@@ -82,10 +176,14 @@
     <div class="container">
         <h1>Video Transcription Service</h1>
         
-        <form id="uploadForm">
-            <input type="file" id="videoFile" accept="video/*,audio/*" required>
-            <button type="submit">Upload and Process</button>
-        </form>
+        <div class="upload-area" id="dropZone">
+            <div class="upload-icon">📁</div>
+            <p>Drag and drop your video file here or click to select</p>
+            <form id="uploadForm">
+                <input type="file" id="videoFile" accept="video/*,audio/*" required style="display: none">
+                <button type="submit">Upload and Process</button>
+            </form>
+        </div>
 
         <div class="stepper">
             <div class="step" data-step="1">
@@ -119,10 +217,10 @@
         </div>
 
         <div class="current-status" id="currentStatus">
-            Ready to process...
+            Ready to process your video...
         </div>
 
-        <div id="summary" class="summary-container"></div>
+        <div id="summary" class="summary-container" style="display: none;"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
@@ -131,6 +229,26 @@
         const currentStatus = document.getElementById('currentStatus');
         const summaryDiv = document.getElementById('summary');
         const form = document.getElementById('uploadForm');
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('videoFile');
+
+        // Drag and drop functionality
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragging');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragging');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragging');
+            fileInput.files = e.dataTransfer.files;
+        });
 
         function updateSteps(step) {
             document.querySelectorAll('.step').forEach(stepEl => {
@@ -140,6 +258,7 @@
                     stepEl.classList.remove('active');
                 } else if (stepNum === step) {
                     stepEl.classList.add('active');
+                    stepEl.classList.remove('completed');
                 } else {
                     stepEl.classList.remove('completed', 'active');
                 }
@@ -147,13 +266,10 @@
         }
 
         socket.on('status', function(data) {
-            console.log("Received status:", data);  // Debug log
             currentStatus.textContent = data.message;
-            
             if (data.step) {
                 updateSteps(data.step);
             }
-            
             if (data.success && data.summary) {
                 summaryDiv.style.display = 'block';
                 summaryDiv.innerHTML = `
@@ -165,14 +281,18 @@
 
         form.onsubmit = async (e) => {
             e.preventDefault();
-            summaryDiv.style.display = 'none';
-            summaryDiv.innerHTML = '';
-            currentStatus.textContent = 'Starting process...';
-            updateSteps(1);
-            
             const formData = new FormData();
             const fileField = document.getElementById('videoFile');
+            
+            if (!fileField.files.length) {
+                alert('Please select a file first');
+                return;
+            }
+
             formData.append('file', fileField.files[0]);
+            summaryDiv.style.display = 'none';
+            updateSteps(1);
+            document.querySelector('.stepper').classList.add('processing');
 
             try {
                 const response = await fetch('/process-video', {
@@ -186,17 +306,11 @@
                     throw new Error(result.error || 'Process failed');
                 }
                 
-                if (result.success && result.summary) {
-                    summaryDiv.style.display = 'block';
-                    summaryDiv.innerHTML = `
-                        <h3>Video Summary</h3>
-                        <div class="summary-text">${result.summary.replace(/\n/g, '<br>')}</div>
-                    `;
-                }
+                document.querySelector('.stepper').classList.remove('processing');
             } catch (error) {
                 console.error('Error:', error);
                 currentStatus.textContent = 'Error: ' + error.message;
-                updateSteps(1); // Reset steps on error
+                document.querySelector('.stepper').classList.remove('processing');
             }
         };
     </script>
