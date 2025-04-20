@@ -1,56 +1,69 @@
 import dotenv
 import os
-
-from time import sleep
+from flask import Flask, request, jsonify
+from werkzeug.utils import secure_filename
 
 from utils.Logger import logger
 from utils.Folders import Folders
 
-from services.VideoService import VideoService
 from services.TranscriptionService import TranscriptionService
 from services.SubtitleService import SubtitleService
 from services.OllamaService import OllamaService
 
 # env
 dotenv.load_dotenv()
-APP_TOKEN   = os.getenv("APP_TOKEN")
-BASE_URL    = os.getenv("BASE_URL")
+PORT        = os.getenv("PORT")
 VERBOSE     = os.getenv("VERBOSE") == True
 MODEL       = os.getenv("MODEL") or "tiny"
-PAUSE       = int(os.getenv("PAUSE") or 60)
+DEBUG       = os.getenv("DEBUG") == True
 
-logger.info(f"\n\nInitializing application: Verbose={VERBOSE}, Model={MODEL}, Pause={PAUSE}, Base Url={BASE_URL}\n")
+# init Flask
+app = Flask(__name__)
 
 # init services
-video_service           = VideoService(BASE_URL, APP_TOKEN)
 transcription_service   = TranscriptionService(MODEL, VERBOSE)
 subtitle_service        = SubtitleService()
 
-# create folders
-Folders.create_directories()
+# Ensure temp/videos directory exists
+os.makedirs('temp/videos', exist_ok=True)
+
+@app.route('/process-video', methods=['POST'])
+def process_video():
+    try:
+        if 'file' not in request.files or 'name' not in request.form:
+            return jsonify({'error': 'Missing file or name'}), 400
+
+        video_file = request.files['file']
+        original_filename = secure_filename(video_file.filename)
+        display_name = request.form['name']
+        
+        logger.info(f"Processing video: {display_name} (File: {original_filename})")
+        
+        # Save uploaded file to temp/videos with original filename
+        video_path = os.path.join('temp', 'videos', original_filename)
+        video_file.save(video_path)
+
+        transcription = transcription_service.transcribe(
+            original_filename, 
+            language="pt",
+            task="transcribe"
+        )
+
+        if transcription is not None:
+            transcription_service.save_transcription(transcription, original_filename)
+            subtitle_service.json_to_srt(transcription, original_filename)
+            
+            chat = OllamaService(file_name=original_filename)
+            chat.generate_summary(transcription["text"])
+            
+            return jsonify({'message': 'Video processed successfully'}), 200
+        
+        return jsonify({'error': 'Transcription failed'}), 500
+
+    except Exception as e:
+        logger.error(f"Error processing video: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
-    while True:
-        ids = video_service.get_videos()
-        data = video_service.get_videos_url(ids)
-
-        if data is not None:
-            for item in data:
-                down = video_service.download_video(item["url"], item["file"]["name"])
-
-                if down:
-                    transcription = transcription_service.transcribe(item["file"]["name"], language="pt", task="transcribe")
-
-                    if transcription is not None:
-                        transcription_service.save_transcription(transcription, item["file"]["name"])
-
-                        subtitle_service.json_to_srt(transcription, item["file"]["name"])
-
-                        chat = OllamaService(file_name=item["file"]["name"])
-                        chat.generate_summary(transcription["text"])
-
-        else:
-            logger.error(f"Error getting video url for video ids={ids}")
-
-        # sleep(PAUSE)
-        exit('Done!')
+    logger.info(f"\n\nInitializing application: Model={MODEL}\n")
+    app.run(host='0.0.0.0', port=PORT, debug=DEBUG)
