@@ -84,17 +84,23 @@ def process_video():
             chat = OllamaService(model=OLLAMA_MODEL, file_name=original_filename)
             summary = chat.generate_summary(transcription["text"])
             
-            socketio.emit('status', {
-                'step': 7, 
-                'message': 'Processing completed!',
-                'summary': summary,
-                'success': True
-            })
-            return jsonify({
-                'message': 'Video processed successfully',
-                'summary': summary,
-                'success': True
-            }), 200
+            # Read the generated summary from file
+            summary_path = os.path.join('temp', 'summaries', f'{original_filename}.txt')
+            if os.path.exists(summary_path):
+                with open(summary_path, 'r', encoding='utf-8') as f:
+                    summary_text = f.read()
+                
+                socketio.emit('status', {
+                    'step': 7, 
+                    'message': 'Processing completed!',
+                    'summary': summary_text,
+                    'success': True
+                })
+                return jsonify({
+                    'message': 'Video processed successfully',
+                    'summary': summary_text,
+                    'success': True
+                }), 200
 
     except Exception as e:
         logger.error(f"Process error: {str(e)}")
