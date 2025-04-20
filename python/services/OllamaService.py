@@ -57,7 +57,7 @@ class OllamaService:
             logger.info("Success on OllamaService.generate_summary")
 
         except Exception as e:
-            logger.error("Error on OllamaService.generate_summary")
+            logger.info("Error on OllamaService.generate_summary")
             logger.error(f'Error: {e}')
 
 # Uso da classe

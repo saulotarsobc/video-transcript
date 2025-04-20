@@ -81,7 +81,7 @@ def process_video():
             subtitle_service.json_to_srt(transcription, original_filename)
             
             socketio.emit('status', {'step': 6, 'message': 'Generating summary...'})
-            chat = OllamaService(model=OLLAMA_MODEL, file_name=original_filename)
+            chat = OllamaService(model=OLLAMA_MODEL, file_name=original_filename, language="pt-BR")
             summary = chat.generate_summary(transcription["text"])
             
             # Read the generated summary from file
