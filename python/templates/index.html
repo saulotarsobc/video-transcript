@@ -147,11 +147,15 @@
         }
 
         socket.on('status', function(data) {
+            console.log("Received status:", data);  // Debug log
             currentStatus.textContent = data.message;
+            
             if (data.step) {
                 updateSteps(data.step);
             }
+            
             if (data.success && data.summary) {
+                console.log("Displaying summary:", data.summary);  // Debug log
                 summaryDiv.style.display = 'block';
                 summaryDiv.innerHTML = `
                     <h3>Video Summary</h3>
@@ -162,12 +166,14 @@
 
         form.onsubmit = async (e) => {
             e.preventDefault();
+            summaryDiv.style.display = 'none';
+            summaryDiv.innerHTML = '';  // Clear previous summary
+            currentStatus.textContent = 'Starting process...';
+            updateSteps(1);
+            
             const formData = new FormData();
             const fileField = document.getElementById('videoFile');
-            
             formData.append('file', fileField.files[0]);
-            summaryDiv.style.display = 'none';
-            updateSteps(1);
 
             try {
                 const response = await fetch('/process-video', {
@@ -175,7 +181,15 @@
                     body: formData
                 });
                 const result = await response.json();
-                console.log('Success:', result);
+                console.log('API Response:', result);  // Debug log
+                
+                if (result.success && result.summary) {
+                    summaryDiv.style.display = 'block';
+                    summaryDiv.innerHTML = `
+                        <h3>Video Summary</h3>
+                        <div class="summary-text">${result.summary.replace(/\n/g, '<br>')}</div>
+                    `;
+                }
             } catch (error) {
                 console.error('Error:', error);
                 currentStatus.textContent = 'Error: ' + error.message;
