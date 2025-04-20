@@ -1,3 +1,7 @@
+# Whisper AI Voice to Text + Ollama AI Chat
+
+![banner](./images/banner.png)
+
 ## Help
 
 - [How to Install & Use Whisper AI Voice to Text](https://youtu.be/ABFqbY_rmEk)
@@ -71,10 +75,8 @@ ffmpeg -i video.mp4 -i aula.srt -c copy -c:s mov_text -metadata:s:s:0 language=p
 winget install ollama;
 
 # Download llama3.2
-ollama pull llama3.2;
+ollama pull "llama3.2";
 
 # Run
-ollama run llama3.2;
-# Run with prompt
-ollama run llama3.2 -p "Hello, my name is";
+ollama serve;
 ```
