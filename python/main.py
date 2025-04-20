@@ -32,14 +32,13 @@ folders.create_directories()
 @app.route('/process-video', methods=['POST'])
 def process_video():
     try:
-        if 'file' not in request.files or 'name' not in request.form:
-            return jsonify({'error': 'Missing file or name'}), 400
+        if 'file' not in request.files:
+            return jsonify({'error': 'Missing file'}), 400
 
         video_file = request.files['file']
         original_filename = secure_filename(video_file.filename)
-        display_name = request.form['name']
         
-        logger.info(f"Processing video: {display_name} (File: {original_filename})")
+        logger.info(f"Processing video: {original_filename}")
         
         # Save uploaded file to temp/videos with original filename
         video_path = os.path.join('temp', 'videos', original_filename)
