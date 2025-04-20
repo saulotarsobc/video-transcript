@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Transcription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .progress-item {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Transcription Service</h1>
+    
+    <form id="uploadForm">
+        <input type="file" id="videoFile" accept="video/*" required>
+        <button type="submit">Upload and Process</button>
+    </form>
+
+    <div id="status">
+        <p>Ready to process videos...</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const statusDiv = document.getElementById('status');
+        const form = document.getElementById('uploadForm');
+
+        socket.on('status', function(data) {
+            const item = document.createElement('div');
+            item.className = 'progress-item';
+            item.textContent = data.message;
+            statusDiv.appendChild(item);
+            statusDiv.scrollTop = statusDiv.scrollHeight;
+        });
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            const fileField = document.getElementById('videoFile');
+            
+            formData.append('file', fileField.files[0]);
+
+            try {
+                const response = await fetch('/process-video', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                console.log('Success:', result);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+    </script>
+</body>
+</html>
