@@ -22,7 +22,7 @@ OLLAMA_MODEL    = os.getenv("OLLAMA_MODEL") or "llama3.2"
 app = Flask(__name__)
 
 # init services
-transcription_service   = TranscriptionService(WHISPER_MODEL, VERBOSE)
+transcription_service   = TranscriptionService(model_name=WHISPER_MODEL, verbose=VERBOSE)
 subtitle_service        = SubtitleService()
 
 # Create directories

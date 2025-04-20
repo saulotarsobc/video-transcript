@@ -5,21 +5,23 @@ import torch
 from utils.Logger import logger
 
 class TranscriptionService:
-    def __init__(self, model, verbose):
+    def __init__(self, model_name, verbose):
+        self.model_name = model_name
         self.verbose = verbose
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model = whisper.load_model(model, download_root="./temp/models")
+        self.model = whisper.load_model(self.model_name, download_root="./temp/models")
         self.model = self.model.to(self.device)
 
         logger.info(f"Using device: {self.device}")
 
     def transcribe(self, file_name, language="pt", task="transcribe"):
-        logger.info(f"Transcribing {file_name} with language {language} and task {task} with model {self.model}")
+        logger.info(f"Transcribing {file_name} with language {language} and task {task} with model \"{self.model_name}\"")
         try:
             result = self.model.transcribe(
                 audio= f"./temp/videos/{file_name}",
                 language=language,
-                task=task
+                task=task,
+                verbose=self.verbose
             )
             
             # Filter out low confidence segments
