@@ -45,15 +45,15 @@ def process_video():
         video_file = request.files['file']
         original_filename = secure_filename(video_file.filename)
         
-        socketio.emit('status', {'message': f'Starting to process {original_filename}'})
+        socketio.emit('status', {'step': 1, 'message': f'Starting to process {original_filename}'})
         
         # Save uploaded file
         video_path = os.path.join('temp', 'videos', original_filename)
         video_file.save(video_path)
-        socketio.emit('status', {'message': 'File uploaded successfully'})
+        socketio.emit('status', {'step': 2, 'message': 'File uploaded successfully'})
 
         # Transcribe
-        socketio.emit('status', {'message': 'Starting transcription...'})
+        socketio.emit('status', {'step': 3, 'message': 'Starting transcription...'})
         transcription = transcription_service.transcribe(
             original_filename, 
             language="pt",
@@ -61,13 +61,13 @@ def process_video():
         )
 
         if transcription is not None:
-            socketio.emit('status', {'message': 'Saving transcription...'})
+            socketio.emit('status', {'step': 4, 'message': 'Saving transcription...'})
             transcription_service.save_transcription(transcription, original_filename)
             
-            socketio.emit('status', {'message': 'Generating subtitles...'})
+            socketio.emit('status', {'step': 5, 'message': 'Generating subtitles...'})
             subtitle_service.json_to_srt(transcription, original_filename)
             
-            socketio.emit('status', {'message': 'Generating summary...'})
+            socketio.emit('status', {'step': 6, 'message': 'Generating summary...'})
             chat = OllamaService(model=OLLAMA_MODEL, file_name=original_filename)
             prompt = f"""Analyze the following transcript and create a comprehensive summary. Focus on:
 1. Main topic or central theme
@@ -82,10 +82,10 @@ Transcript:
 
 Generate a summary in Portuguese:"""
 
-            chat.generate_summary(prompt)
+            summary = chat.generate_summary(prompt)
             
-            socketio.emit('status', {'message': 'Processing completed!'})
-            return jsonify({'message': 'Video processed successfully'}), 200
+            socketio.emit('status', {'step': 7, 'message': 'Processing completed!', 'summary': summary})
+            return jsonify({'message': 'Video processed successfully', 'summary': summary}), 200
         
         return jsonify({'error': 'Transcription failed'}), 500
 
