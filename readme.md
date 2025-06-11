@@ -10,4 +10,4 @@
 
 ## Help
 
--How to install and use Whisper offline (no internet required) [#1463](https://github.com/openai/whisper/discussions/1463)
+- How to install and use Whisper offline (no internet required) [#1463](https://github.com/openai/whisper/discussions/1463)
